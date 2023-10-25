@@ -1,4 +1,4 @@
-import mongoose, { Schema, mongo } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 mongoose.connect(process.env.MONGO_URI);
 
 mongoose.Promise = global.Promise;
@@ -15,5 +15,5 @@ const TicketSchema = new Schema(
   { timestamps: true }
 );
 
-const Ticket = mongoose.models.Ticket || mongoose.model("Ticket", TicketSchema);
+const Ticket = mongoose.models.Ticket || mongoose.model("Ticket", TicketSchema); //("collection name", schema name)
 export default Ticket;

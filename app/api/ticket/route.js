@@ -16,3 +16,12 @@ export async function POST(req) {
     );
   }
 }
+
+export async function GET (){
+  try {
+    const ticket = await Ticket.find({})
+    return NextResponse.json({ message: "ticket found", ticket }, { status: 200 })
+  } catch (error) {
+    return NextResponse.json({ message: "error occured", error}, {status: 500})
+  }
+}
