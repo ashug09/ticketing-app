@@ -3,19 +3,20 @@ import React from "react";
 import { Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
+import { Loader } from "@mantine/core";
 
 export default function DeleteTicket({ id }) {
   const router = useRouter();
   const [loading, setLoading] = React.useState(false);
   const DeleteTicket = async () => {
-    sessionStorage.setItem("loading", "true");
     try {
+      setLoading(true);
       const res = await fetch(`http://localhost:3000/api/ticket/${id}`, {
         method: "DELETE",
       });
       if (res.status === 200) {
+        setLoading(false);
         alert("Ticket deleted");
-        sessionStorage.setItem("loading", "false");
         window.location.reload();
       }
       console.log("this is res: " + res.status);
@@ -30,7 +31,7 @@ export default function DeleteTicket({ id }) {
       color="red"
       variant="filled"
     >
-      Delete
+      {loading ? <Loader color="white" size="xs" /> : <span>Delete</span>}
     </Button>
   );
 }

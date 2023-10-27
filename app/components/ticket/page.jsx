@@ -3,11 +3,12 @@ import { Card, Image, Text, Group, RingProgress } from "@mantine/core";
 import classes from "./ticket.module.css";
 import { Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
-import { Loader } from '@mantine/core';
+import { Loader } from "@mantine/core";
 import React from "react";
 import TicketDelete from "./delete";
+import { createContext } from "react";
+
 export default function Ticket({ ticket }) {
-  const [loading, setLoading] = React.useState(sessionStorage.getItem("loading"));
   const router = useRouter();
   const stats = [
     { title: "Priority", value: ticket.priority },
@@ -71,54 +72,41 @@ export default function Ticket({ ticket }) {
   //   }
   // }
   return (
-    <div className="relative">
-      {sessionStorage.getItem("loading") == "true" ? (
-        <div className="absolute z-50  bg-white h-screen w-screen">
-          <Loader
-            className="mx-auto absolute top-[50%]  h-screen w-screen"
-            color="blue"
-            type="dots"
+    <Card
+      withBorder
+      padding="lg"
+      className={`w-72 mx-auto my-2 ${classes.card}`}
+    >
+      <Group justify="space-between" mt="xl">
+        <Text fz="sm" fw={700} className={`capitalize ${classes.title}`}>
+          {ticket.title}
+        </Text>
+        <Group gap={5}>
+          <Text fz="xs" c="dimmed">
+            {ticket.status}
+          </Text>
+          {console.log("this is status: " + status)}
+          <RingProgress
+            size={28}
+            thickness={4}
+            sections={[{ value: status, color: "blue" }]}
           />
-        </div>
-      ) : (
-        <Card
-          withBorder
-          padding="lg"
-          className={`w-72 mx-auto my-2 ${classes.card}`}
-        >
-          <Group justify="space-between" mt="xl">
-            <Text fz="sm" fw={700} className={`capitalize ${classes.title}`}>
-              {ticket.title}
-            </Text>
-            <Group gap={5}>
-              <Text fz="xs" c="dimmed">
-                {ticket.status}
-              </Text>
-              {console.log("this is status: " + status)}
-              <RingProgress
-                size={28}
-                thickness={4}
-                sections={[{ value: status, color: "blue" }]}
-              />
-            </Group>
-          </Group>
-          <Text className="capitalize" mt="sm" mb="xs" c="dimmed" fz="xs">
-            {ticket.description}
-          </Text>
-          <Text className="capitalize" mb="xs" c="dimmed" fz="xs">
-            created at: {formatTimeStamp()}
-          </Text>
-          <Card.Section className={classes.footer}>{items}</Card.Section>
-          <Group className="flex ">
-            {/* <Button onClick={()=>DeleteTicket()} className="mx-auto" color="red" variant="filled">Delete</Button> */}
-            
-            <TicketDelete id={ticket._id} />
-            <Button className="mx-auto" variant="filled">
-              Modify
-            </Button>
-          </Group>
-        </Card>
-      )}
-    </div>
+        </Group>
+      </Group>
+      <Text className="capitalize" mt="sm" mb="xs" c="dimmed" fz="xs">
+        {ticket.description}
+      </Text>
+      <Text className="capitalize" mb="xs" c="dimmed" fz="xs">
+        created at: {formatTimeStamp()}
+      </Text>
+      <Card.Section className={classes.footer}>{items}</Card.Section>
+      <Group className="flex ">
+        {/* <Button onClick={()=>DeleteTicket()} className="mx-auto" color="red" variant="filled">Delete</Button> */}
+          <TicketDelete id={ticket._id} />
+        <Button className="mx-auto" variant="filled">
+          Modify
+        </Button>
+      </Group>
+    </Card>
   );
 }
