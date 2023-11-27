@@ -14,7 +14,8 @@ import { Loader } from "@mantine/core";
 import { Select } from "@mantine/core";
 import React from "react";
 
-export default function GetInTouchSimple() {
+
+export default function TicketForm() {
   const [loading, setLoading] = React.useState(false);
   const ticketCreate = async () => {
     console.log("this is form: " + JSON.stringify(form.values));

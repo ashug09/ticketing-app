@@ -38,38 +38,39 @@ export default function Home() {
 
   const uniqueCategories = [...new Set(data.map((item) => item.category))];
   return (
-    <div>
+    <>
       <Nav />
-
-      <div className="relative">
-        {loading ? (
-          <div className="absolute z-50  bg-white h-screen w-screen">
-            <Loader
-              className="mx-auto absolute top-[50%]  h-screen w-screen"
-              color="blue"
-              type="dots"
-            />
-          </div>
-        ) : (
-          data &&
-          uniqueCategories?.map((uniqueCategory, uniqueIndex) => (
-            <div key={uniqueIndex}>
-              <h1 className="capitalize mx-12 mt-5 mb-4 text-4xl font-medium">
-                {uniqueCategory}
-              </h1>
-              <div className="lg:grid lg:grid-cols-4 lg:gap-4 md:grid md:grid-cols-2 md:gap-1">
-                {data
-                  .filter((ticket) => ticket.category === uniqueCategory)
-                  .map((ticket, index) => (
-                    <div key={index}>
-                      <Ticket key={index} ticket={ticket} />
-                    </div>
-                  ))}
-              </div>
+      <div>
+        <div className="relative">
+          {loading ? (
+            <div className="absolute z-50  bg-white h-screen w-screen">
+              <Loader
+                className="mx-auto absolute top-[50%]  h-screen w-screen"
+                color="blue"
+                type="dots"
+              />
             </div>
-          ))
-        )}
+          ) : (
+            data &&
+            uniqueCategories?.map((uniqueCategory, uniqueIndex) => (
+              <div key={uniqueIndex}>
+                <h1 className="capitalize mx-12 mt-5 mb-4 text-4xl font-medium">
+                  {uniqueCategory}
+                </h1>
+                <div className="lg:grid lg:grid-cols-4 lg:gap-4 md:grid md:grid-cols-2 md:gap-1">
+                  {data
+                    .filter((ticket) => ticket.category === uniqueCategory)
+                    .map((ticket, index) => (
+                      <div key={index}>
+                        <Ticket key={index} ticket={ticket} />
+                      </div>
+                    ))}
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

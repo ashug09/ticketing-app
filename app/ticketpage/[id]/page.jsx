@@ -1,5 +1,9 @@
 import React from "react";
-
+import TicketForm from "../../components/form/page.jsx";
 export default function Ticketpage({ params }) {
-  return <div>Ticketpage {params.id}</div>;
+  return (
+    <div>
+      <TicketForm />
+    </div>
+  );
 }
