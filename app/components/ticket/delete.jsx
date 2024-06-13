@@ -4,6 +4,7 @@ import { Button } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { Router } from "next/router";
 import { Loader } from "@mantine/core";
+import toast from "react-hot-toast";
 
 export default function DeleteTicket({ id }) {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function DeleteTicket({ id }) {
       });
       if (res.status === 200) {
         setLoading(false);
-        alert("Ticket deleted");
+        toast.success("Ticket deleted");
         window.location.reload();
       }
       console.log("this is res: " + res.status);

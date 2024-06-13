@@ -14,6 +14,7 @@ export default function Home() {
     getTicket();
   }, []);
 
+  
   const getTicket = async () => {
     try {
       const res = await fetch("http://localhost:3000/api/ticket", {

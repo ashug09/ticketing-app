@@ -2,7 +2,7 @@
 import { Card, Image, Text, Group, RingProgress } from "@mantine/core";
 import classes from "./ticket.module.css";
 import { Button } from "@mantine/core";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Loader } from "@mantine/core";
 import React from "react";
 import TicketDelete from "./delete";
@@ -10,6 +10,11 @@ import { createContext } from "react";
 
 export default function Ticket({ ticket }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams({
+    id: ticket._id,
+    ticket: JSON.stringify(ticket)
+  });
   const stats = [
     { title: "Priority", value: ticket.priority },
     { title: "Category", value: ticket.category },
@@ -102,8 +107,15 @@ export default function Ticket({ ticket }) {
       <Card.Section className={classes.footer}>{items}</Card.Section>
       <Group className="flex ">
         {/* <Button onClick={()=>DeleteTicket()} className="mx-auto" color="red" variant="filled">Delete</Button> */}
-          <TicketDelete id={ticket._id} />
-        <Button className="mx-auto" variant="filled">
+        <TicketDelete id={ticket._id} />
+        <Button
+          onClick={() => {
+            router.push(`/components/ticket/modify?${params.toString()}`);
+            // params.set("id", ticket._id);
+          }}
+          className="mx-auto"
+          variant="filled"
+        >
           Modify
         </Button>
       </Group>

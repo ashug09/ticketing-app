@@ -1,50 +1,83 @@
 "use client";
 import {
-  TextInput,
-  Textarea,
-  SimpleGrid,
-  Group,
-  Title,
   Button,
+  Group,
+  Loader,
+  Radio,
+  Select,
+  SimpleGrid,
+  TextInput,
+  Title,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import { NativeSelect } from "@mantine/core";
-import { Radio } from "@mantine/core";
-import { Loader } from "@mantine/core";
-import { Select } from "@mantine/core";
-import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
-
-export default function TicketForm() {
+export default function Modify() {
   const router = useRouter();
-  const [loading, setLoading] = React.useState(false);
-  const ticketCreate = async () => {
-    console.log("this is form: " + JSON.stringify(form.values));
-    setLoading(true);
-    const res = await fetch("/api/ticket", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: form.values.title,
-        description: form.values.description,
-        category: form.values.category,
-        status: form.values.status,
-        progress: 0,
-        priority: form.values.priority,
-        active: true,
-      }),
-    });
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const [loading, setLoading] = React.useState(true);
+  const [data, setData] = useState();
+  useEffect(() => {
+    getTicketWithId(id);
+  }, []);
+  const getTicketWithId = async (id) => {
+    try {
+      const res = await fetch(
+        `http://localhost:3000/api/getTicketWithId/${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setData(data.data);
+          form.values.title = data.data.title;
+          form.values.description = data.data.description;
+          form.values.category = data.data.category;
+          form.values.status = data.data.status;
+          form.values.priority = data.data.priority;
+          form.values.active = data.data.active;
+          console.log(data);
+          setLoading(false);
+        });
 
-    if (res.status === 201) {
-      toast.success("Ticket created");
-      setLoading(false);
-      router.push("/");
-    } else {
-      alert("Ticket not created");
+      console.log("this is res: " + res);
+    } catch (error) {
+      alert(error);
+    }
+  };
+  const modifyTicket = async (id) => {
+    try {
+      setLoading(true);
+      const res = await fetch(`http://localhost:3000/api/getTicketWithId/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: form.values.title,
+          description: form.values.description,
+          category: form.values.category,
+          status: form.values.status,
+          priority: form.values.priority,
+          active: form.values.active,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          setLoading(false);
+          toast.success("Ticket modified");
+          router.push("/");
+        });
+    } catch (error) {
+      alert(error);
     }
   };
   const form = useForm({
@@ -61,8 +94,8 @@ export default function TicketForm() {
         value.trim().length > 0 ? null : "Title should not be empty",
       description: (value) =>
         value.trim().length > 0 ? null : "Description should not be empty",
-      priority: (value) =>
-        value.trim().length > 0 ? null : "Priority should not be empty",
+      // priority: (value) =>
+      //   value.trim().length > 0 ? null : "Priority should not be empty",
       category: (value) =>
         value.trim().length > 0 ? null : "Category should not be empty",
       status: (value) =>
@@ -100,7 +133,7 @@ export default function TicketForm() {
                   />
                 );
               }
-              ticketCreate();
+              modifyTicket(data._id);
               console.log(
                 form.values.title,
                 form.values.description,
@@ -176,7 +209,7 @@ export default function TicketForm() {
 
             <Group justify="center" mt="xl">
               <Button type="submit" size="md">
-                Create
+                Update Ticket
               </Button>
             </Group>
           </form>
